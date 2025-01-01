@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class HelloService {
     public String getGreeting() {
-        return "Hello, Spring Boottttt!";
+        return "Hello, Spring Boot!";
     }
 }
