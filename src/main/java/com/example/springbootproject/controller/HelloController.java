@@ -1,10 +1,13 @@
 package com.example.springbootproject.controller;
 
+import com.example.springbootproject.dto.ApiResponse;
 import com.example.springbootproject.model.User;
 import com.example.springbootproject.model.UserData;
 import com.example.springbootproject.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 public class HelloController {
@@ -17,11 +20,21 @@ public class HelloController {
     }
 
     // Endpoint to return a greeting message
-    @GetMapping("/home")
-    public String hello() {
-        return helloService.getGreeting();
+    @GetMapping("/get/users")
+    public ResponseEntity<ApiResponse<Page<User>>> getAllUsers(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        Page<User> users = helloService.getAllUsers(page, size, sortBy, sortDirection);
+        ApiResponse<Page<User>> response = new ApiResponse<>(
+            200,
+            "Users fetched successfully",
+            users
+        );
+        return ResponseEntity.ok(response);
     }
-
     // Endpoint to create a new user and save to the database
     @PostMapping("/users")
     public User createUser(@RequestBody User user) {
