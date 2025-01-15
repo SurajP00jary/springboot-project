@@ -25,9 +25,10 @@ public class HelloController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy,
-        @RequestParam(defaultValue = "asc") String sortDirection
+        @RequestParam(defaultValue = "asc") String sortDirection,
+        @RequestParam(required = false) String search
     ) {
-        Page<User> users = helloService.getAllUsers(page, size, sortBy, sortDirection);
+        Page<User> users = helloService.getAllUsers(page, size, sortBy, sortDirection,search);
         ApiResponse<Page<User>> response = new ApiResponse<>(
             200,
             "Users fetched successfully",

@@ -24,11 +24,14 @@ public class HelloService {
     }
 
     // Basic getapi 
- public Page<User> getAllUsers(int page, int size, String sortBy, String sortDirection) {
+ public Page<User> getAllUsers(int page, int size, String sortBy, String sortDirection,String search) {
     Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) 
                 ? Sort.by(sortBy).ascending() 
                 : Sort.by(sortBy).descending();
     Pageable pageable = PageRequest.of(page, size, sort);
+    if (search != null && !search.isEmpty()) {
+        return userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable);
+    }
     return userRepository.findAll(pageable);
 }
 
