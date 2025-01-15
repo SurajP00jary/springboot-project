@@ -5,8 +5,11 @@ import com.example.springbootproject.model.UserData;
 import com.example.springbootproject.repository.UserDataRepository;
 import com.example.springbootproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 @Service
 public class HelloService {
 
@@ -20,10 +23,17 @@ public class HelloService {
         this.userDataRepository = userDataRepository;
     }
 
-    // Basic greeting message
-    public String getGreeting() {
-        return "Hello, Spring Boot!";
+    // Basic getapi 
+ public Page<User> getAllUsers(int page, int size, String sortBy, String sortDirection,String search) {
+    Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+                ? Sort.by(sortBy).ascending() 
+                : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    if (search != null && !search.isEmpty()) {
+        return userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable);
     }
+    return userRepository.findAll(pageable);
+}
 
     // Method to create and save a user to the database
     public User createUser(User user) {
